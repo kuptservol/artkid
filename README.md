@@ -1,4 +1,4 @@
-# ArtKid — Expo React Native prototype
+# ArtKid — Expo React Native prototype [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/kuptservol/artkid/blob/main/notebooks/playground.ipynb)
 
 Simple prototype: capture or pick a child drawing → send to a ControlNet model → preview result. Android-focused for now.
 
