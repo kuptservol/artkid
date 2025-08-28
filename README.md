@@ -1,50 +1,73 @@
-# Welcome to your Expo app 👋
+# ArtKid — Expo React Native prototype
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+Simple prototype: capture or pick a child drawing → send to a ControlNet model → preview result. Android-focused for now.
 
-## Get started
+## Setup
 
-1. Install dependencies
-
-   ```bash
-   npm install
-   ```
-
-2. Start the app
-
-   ```bash
-   npx expo start
-   ```
-
-In the output, you'll find options to open the app in a
-
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
-
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
-
-## Get a fresh project
-
-When you're ready, run:
+1) Install deps
 
 ```bash
-npm run reset-project
+npm install
 ```
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+2) Configure environment (Replicate API)
 
-## Learn more
+Create `.env` in project root:
 
-To learn more about developing your project with Expo, look at the following resources:
+```bash
+EXPO_PUBLIC_REPLICATE_TOKEN=your_replicate_token
+# Optional: override default pinned model version (jagilley/controlnet-scribble)
+# Default in code: 435061a1b5a4c1e26740464bf786efdfa9cb3a3ac488595a2de23e143fdb0117
+EXPO_PUBLIC_REPLICATE_MODEL_VERSION=
+```
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
+Notes:
+- Token: create at `https://replicate.com/account/api-tokens`.
+- Default model: `jagilley/controlnet-scribble` pinned version above. You can paste another version id to override.
 
-## Join the community
+3) Android run
 
-Join our community of developers creating universal apps.
+```bash
+npm run android
+```
 
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+Requirements:
+- Android Studio emulator running or a USB‑connected device with USB debugging.
+
+## Usage
+
+- On the Home tab press “Камера / Галерея” to capture/pick an image.
+- Press “Сгенерировать” to send it to the Replicate model.
+- The result is displayed below.
+
+## Where to change things
+
+- UI actions: `app/(tabs)/index.tsx`
+- Generation service (Replicate upload + prediction): `services/generation.ts`
+- Expo config/permissions: `app.json`
+
+## Switching providers
+
+Currently wired for Replicate (upload → prediction → poll). To switch to Fal.ai or your server, replace `services/generation.ts` implementation keeping the same function signature.
+
+## Notebook playground
+
+Location: `notebooks/playground.ipynb`
+
+Setup (one-time):
+
+```bash
+python3 -m venv .venv
+source .venv/bin/activate
+python -m pip install --upgrade pip
+pip install jupyter ipywidgets pillow requests
+```
+
+Run:
+
+```bash
+jupyter notebook
+# open notebooks/playground.ipynb
+```
+
+Paste your Replicate token in the widget, upload an image, tweak params, and click Generate.
